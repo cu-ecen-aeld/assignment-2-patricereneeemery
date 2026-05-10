@@ -1,40 +1,10 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-
+#include <string.h>
 #include "unity.h"
-#include <stdbool.h>
-#include <stdlib.h>
-#include "../../examples/autotest-validate/autotest-validate.h"
-#include "../../assignment-autotest/test/assignment1/username-from-conf-file.h"
+#include "autotest-validate.h"
+#include "username-from-conf-file.h"
 
-/**
-* This function should:
-*   1) Call the my_username() function in autotest-validate.c to get your hard coded username.
-*   2) Obtain the value returned from function malloc_username_from_conf_file() in username-from-conf-file.h within
-*       the assignment autotest submodule at assignment-autotest/test/assignment1/
-*   3) Use unity assertion TEST_ASSERT_EQUAL_STRING_MESSAGE to verify the two strings are equal.  See
-*       the [unity assertion reference](https://github.com/ThrowTheSwitch/Unity/blob/master/docs/UnityAssertionsReference.md)
-*/
-void test_validate_my_username()
-{
-    /**
-     * TODO: Replace the line below with your code here as described above to verify your /conf/username.txt 
-     * config file and my_username() functions are setup properly
-     */
-    const char *expected = my_username();   // 1) Hard‑coded username from autotest-validate.c
-    char *from_file = malloc_username_from_conf_file();   // 2) Username read from conf/username.txt
-
-    TEST_ASSERT_EQUAL_STRING_MESSAGE(
-       expected,
-        from_file,
-        "Username from my_username() does not match username from conf file"
-    );
-
-    free(from_file);   // 3) Prevent memory leak
-}
-// ------------------------------------------------------------
 // Required Unity functions
 void setUp(void) {}
 void tearDown(void) {}
@@ -43,7 +13,23 @@ void tearDown(void) {}
 // Your implementation of my_username()
 const char* my_username()
 {
-    return "patricereneeemery";   // <-- replace with your GitHub username
+    return "patricereneeemery";   // <-- your GitHub username
+}
+
+// ------------------------------------------------------------
+// Test: compare my_username() with username from conf file
+void test_validate_my_username(void)
+{
+    const char *expected = my_username();
+    char *actual = malloc_username_from_conf_file();
+
+    TEST_ASSERT_NOT_NULL_MESSAGE(actual,
+        "malloc_username_from_conf_file() returned NULL");
+
+    TEST_ASSERT_EQUAL_STRING_MESSAGE(expected, actual,
+        "Username from my_username() does not match username from conf file");
+
+    free(actual);
 }
 
 // ------------------------------------------------------------
