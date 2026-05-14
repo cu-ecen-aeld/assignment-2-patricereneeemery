@@ -1,31 +1,23 @@
-name: AESD Autotest
+name: assignment-autograding
 
 on:
   push:
-    branches:
-      - master
-      - main
+    branches: [ Assignment1 ]
   pull_request:
-    branches:
-      - master
-      - main
+    branches: [ Assignment1 ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        submodules: true
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential gcc g++ make
+    - name: Set execute permissions
+      run: chmod +x finder-app/finder.sh finder-app/writer.sh
 
-      - name: Run full-test.sh
-        run: |
-          chmod +x full-test.sh
-          ./full-test.sh
+    - name: Run Assignment 1 tests
+      run: make -C finder-app test
